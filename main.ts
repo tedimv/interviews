@@ -54,12 +54,12 @@ router.post("/users", async (ctx) => {
 router.get("/users/:id", async (ctx) => {
   const id = ctx.params.id;
   const user = await db.get([TableKeys.users, id]);
-  console.log({ id, user });
 
   if (!user.value) {
     return ctx.response.status = 404;
   }
 
+  ctx.response.headers.set("content-type", "text/json");
   ctx.response.body = user.value;
 });
 
