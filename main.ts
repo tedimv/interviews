@@ -6,6 +6,9 @@ const app = new Application();
 const router = new Router();
 
 const db = await Deno.openKv();
+const TableKeys = {
+  users: "users",
+} as const;
 
 router.get("/price/crypto", async (ctx) => {
   const assetPrice = await import("./price_crypto.json", {
@@ -44,13 +47,15 @@ router.post("/users", async (ctx) => {
     lastName: faker.person.lastName(),
   };
 
-  await db.set([id], newUser);
+  await db.set([TableKeys.users, id], newUser);
   ctx.response.body = newUser;
 });
 
 router.get("/users/:id", async (ctx) => {
   const id = ctx.params.id;
-  const user = await db.get([id]);
+  const user = await db.get([TableKeys.users, id]);
+  console.log({ id, user });
+
   if (!user.value) {
     return ctx.response.status = 404;
   }
@@ -61,12 +66,12 @@ router.get("/users/:id", async (ctx) => {
 router.put("/users/:id", async (ctx) => {
   const id = ctx.params.id;
   const updatedUser = ctx.request.body;
-  const userFound = await db.get([id]);
+  const userFound = await db.get([TableKeys.users, id]);
   if (!userFound.value) {
     return ctx.response.status = 404;
   }
 
-  await db.set([id], updatedUser);
+  await db.set([TableKeys.users, id], updatedUser);
   ctx.response.status = 204;
 });
 
