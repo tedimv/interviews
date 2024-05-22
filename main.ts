@@ -59,7 +59,7 @@ router.get("/users/:id", async (ctx) => {
     return ctx.response.status = 404;
   }
 
-  ctx.response.headers.set("content-type", "text/json");
+  ctx.response.headers.set("content-type", "application/json");
   ctx.response.body = user.value;
 });
 
