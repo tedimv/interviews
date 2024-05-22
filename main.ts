@@ -82,5 +82,10 @@ router.put("/users/:id", async (ctx) => {
   ctx.response.status = 204;
 });
 
+router.delete("/admin/users/:id/really", async (ctx) => {
+  await db.delete([TableKeys.users, ctx.params.id]);
+  ctx.response.status = 204;
+});
+
 app.use(router.routes());
 app.listen({ port: 5000 });
