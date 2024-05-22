@@ -65,12 +65,19 @@ router.get("/users/:id", async (ctx) => {
 
 router.put("/users/:id", async (ctx) => {
   const id = ctx.params.id;
-  const updatedUser = ctx.request.body;
   const userFound = await db.get([TableKeys.users, id]);
   if (!userFound.value) {
     return ctx.response.status = 404;
   }
 
+  const { firstName, lastName } = ctx.request.body as unknown as {
+    firstName: string;
+    lastName: string;
+  };
+  const updatedUser = {
+    firstName,
+    lastName,
+  };
   await db.set([TableKeys.users, id], updatedUser);
   ctx.response.status = 204;
 });
