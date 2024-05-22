@@ -77,8 +77,8 @@ router.put("/users/:id", async (ctx) => {
     firstName,
     lastName,
   };
-  await db.set([TableKeys.users, id], updatedUser);
-  ctx.response.status = 204;
+  const updated = await db.set([TableKeys.users, id], updatedUser);
+  ctx.response.body = updated;
 });
 
 router.delete("/admin/users/:id/really", async (ctx) => {
