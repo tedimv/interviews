@@ -74,6 +74,7 @@ router.put("/users/:id", async (ctx) => {
     lastName: string;
   };
   const updatedUser = {
+    id,
     firstName,
     lastName,
   };
