@@ -69,7 +69,7 @@ router.put("/users/:id", async (ctx) => {
     return ctx.response.status = 404;
   }
 
-  const { firstName, lastName } = ctx.request.body.json() as unknown as {
+  const { firstName, lastName } = await ctx.request.body.json() as unknown as {
     firstName: string;
     lastName: string;
   };
