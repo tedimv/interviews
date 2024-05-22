@@ -59,7 +59,6 @@ router.get("/users/:id", async (ctx) => {
     return ctx.response.status = 404;
   }
 
-  ctx.response.headers.set("content-type", "application/json");
   ctx.response.body = user.value;
 });
 
@@ -70,7 +69,7 @@ router.put("/users/:id", async (ctx) => {
     return ctx.response.status = 404;
   }
 
-  const { firstName, lastName } = ctx.request.body as unknown as {
+  const { firstName, lastName } = ctx.request.body.json() as unknown as {
     firstName: string;
     lastName: string;
   };
