@@ -15,13 +15,14 @@ router.delete("/admin/users/:id/really", async (ctx) => {
   ctx.response.status = 204;
 });
 
-router.post("/admin/users/create", async (ctx) => {
+router.post("/admin/users/create/really", async (ctx) => {
   const faker = new Faker({ locale: [allLocales.en_US, allLocales.en] });
   const id = uuidV4();
   const newUser = {
     id,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
+    age: 23
   };
 
   await db.set([Table.users, id], newUser);
