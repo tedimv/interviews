@@ -29,29 +29,29 @@ router.post("/admin/users/create/really", async (ctx) => {
   ctx.response.body = newUser;
 });
 
-router.get("/price/crypto", async (ctx) => {
-  const assetPrice = await import("./price_crypto.json", {
+router.get("/asset/crypto", async (ctx) => {
+  const assetPrice = await import("./asset_crypto.json", {
     with: { type: "json" },
   });
   ctx.response.body = assetPrice.default;
 });
 
-router.get("/price/properties", async (ctx) => {
-  const assetPrice = await import("./price_properties.json", {
+router.get("/asset/properties", async (ctx) => {
+  const assetPrice = await import("./asset_properties.json", {
     with: { type: "json" },
   });
   ctx.response.body = assetPrice.default;
 });
 
-router.get("/price/rare_metals", async (ctx) => {
-  const assetPrice = await import("./price_rare_metals.json", {
+router.get("/asset/rare_metals", async (ctx) => {
+  const assetPrice = await import("./asset_rare_metals.json", {
     with: { type: "json" },
   });
   ctx.response.body = assetPrice.default;
 });
 
-router.get("/price/stocks", async (ctx) => {
-  const assetPrice = await import("./price_stocks.json", {
+router.get("/asset/stocks", async (ctx) => {
+  const assetPrice = await import("./asset_stocks.json", {
     with: { type: "json" },
   });
   ctx.response.body = assetPrice.default;
