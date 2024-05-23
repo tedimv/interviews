@@ -6,9 +6,27 @@ const app = new Application();
 const router = new Router();
 
 const db = await Deno.openKv();
-const TableKeys = {
+export const Table = {
   users: "users",
 } as const;
+
+router.delete("/admin/users/:id/really", async (ctx) => {
+  await db.delete([Table.users, ctx.params.id]);
+  ctx.response.status = 204;
+});
+
+router.post("/admin/users/create", async (ctx) => {
+  const faker = new Faker({ locale: [allLocales.en_US, allLocales.en] });
+  const id = uuidV4();
+  const newUser = {
+    id,
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+  };
+
+  await db.set([Table.users, id], newUser);
+  ctx.response.body = newUser;
+});
 
 router.get("/price/crypto", async (ctx) => {
   const assetPrice = await import("./price_crypto.json", {
@@ -38,22 +56,9 @@ router.get("/price/stocks", async (ctx) => {
   ctx.response.body = assetPrice.default;
 });
 
-router.post("/users", async (ctx) => {
-  const faker = new Faker({ locale: [allLocales.en_US, allLocales.en] });
-  const id = uuidV4();
-  const newUser = {
-    id: uuidV4(),
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-  };
-
-  await db.set([TableKeys.users, id], newUser);
-  ctx.response.body = newUser;
-});
-
 router.get("/users/:id", async (ctx) => {
   const id = ctx.params.id;
-  const user = await db.get([TableKeys.users, id]);
+  const user = await db.get([Table.users, id]);
 
   if (!user.value) {
     return ctx.response.status = 404;
@@ -64,28 +69,15 @@ router.get("/users/:id", async (ctx) => {
 
 router.put("/users/:id", async (ctx) => {
   const id = ctx.params.id;
-  const userFound = await db.get([TableKeys.users, id]);
+  const userFound = await db.get([Table.users, id]);
   if (!userFound.value) {
     return ctx.response.status = 404;
   }
 
-  const { firstName, lastName } = await ctx.request.body.json() as unknown as {
-    firstName: string;
-    lastName: string;
-  };
-  const updatedUser = {
-    id,
-    firstName,
-    lastName,
-  };
-  await db.set([TableKeys.users, id], updatedUser);
-  const updated = await db.get([TableKeys.users, id]);
+  const payload = await ctx.request.body.json();
+  await db.set([Table.users, id], { ...payload, id });
+  const updated = await db.get([Table.users, id]);
   ctx.response.body = updated.value as object;
-});
-
-router.delete("/admin/users/:id/really", async (ctx) => {
-  await db.delete([TableKeys.users, ctx.params.id]);
-  ctx.response.status = 204;
 });
 
 app.use(router.routes());
