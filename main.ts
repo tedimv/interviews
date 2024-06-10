@@ -1,4 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 import { allLocales, Faker } from "@faker-js/faker";
 import { v4 as uuidV4 } from "uuid";
 
@@ -9,6 +10,10 @@ const db = await Deno.openKv();
 export const Table = {
   users: "users",
 } as const;
+
+app.use(oakCors({
+  origin: "*"
+}));
 
 router.delete("/admin/users/:id/really", async (ctx) => {
   await db.delete([Table.users, ctx.params.id]);
